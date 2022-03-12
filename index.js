@@ -62,8 +62,15 @@ function gradleRunCommand(folder) {
         throw `Missing executable: ${folder}${installDir}`;
     return `.${installDir}/${gradleProjectName}/bin/${gradleProjectName}`;
 }
-function runAppNative(folder) {
+function golangRunCommand(folder) {
     return `./app`;
+}
+function rustRunCommand(folder) {
+    if (fs_1.default.existsSync(`${folder}/target/release/app`))
+        return `./target/release/app`;
+    if (fs_1.default.existsSync(`${folder}/target/release/app.exe`))
+        return `./target/release/app.exe`;
+    throw `Missing executable: /target/release/app`;
 }
 exports.RUN_COMMAND = {
     docker: () => {
@@ -90,8 +97,8 @@ exports.RUN_COMMAND = {
     ruby: () => {
         throw "Ruby support is coming soon";
     },
-    rust: runAppNative,
-    go: runAppNative,
+    rust: rustRunCommand,
+    go: golangRunCommand,
 };
 function generateNewFileName(folder) {
     let result;
