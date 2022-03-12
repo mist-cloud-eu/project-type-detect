@@ -66,7 +66,7 @@ function gradleRunCommand(folder: string) {
   return `.${installDir}/${gradleProjectName}/bin/${gradleProjectName}`;
 }
 
-function golangRunCommand(folder: string) {
+function runAppNative(folder: string) {
   return `./app`;
 }
 
@@ -97,10 +97,8 @@ export const RUN_COMMAND: {
   ruby: () => {
     throw "Ruby support is coming soon";
   },
-  rust: () => {
-    throw "Rust support is coming soon";
-  },
-  go: golangRunCommand,
+  rust: runAppNative,
+  go: runAppNative,
 };
 
 function generateNewFileName(folder: string) {
@@ -144,6 +142,12 @@ function golangBuild(folder: string) {
   return buildCommands;
 }
 
+function rustBuild(folder: string) {
+  let buildCommands: string[] = [];
+  buildCommands.push(`cargo build --release -o app`);
+  return buildCommands;
+}
+
 export const BUILD_SCRIPT_MAKERS: {
   [projectType in ProjectType]: (folder: string) => string[];
 } = {
@@ -171,9 +175,7 @@ export const BUILD_SCRIPT_MAKERS: {
   ruby: () => {
     throw "Ruby support is coming soon";
   },
-  rust: () => {
-    throw "Rust support is coming soon";
-  },
+  rust: rustBuild,
   go: golangBuild,
 };
 
