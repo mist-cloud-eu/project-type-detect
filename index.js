@@ -53,10 +53,10 @@ function gradleRunCommand(folder) {
     let gradleProjectName = fs_1.default.readdirSync(`${folder}/build/install/`)[0];
     if (gradleProjectName === undefined)
         throw `Missing executable: ${folder}build/install/`;
-    return `sh ./build/install/${gradleProjectName}/bin/${gradleProjectName}`;
+    return `./build/install/${gradleProjectName}/bin/${gradleProjectName}`;
 }
 function golangRunCommand(folder) {
-    return `sh ./app`;
+    return `./app`;
 }
 exports.RUN_COMMAND = {
     docker: () => {

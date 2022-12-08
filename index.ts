@@ -58,11 +58,11 @@ function gradleRunCommand(folder: string) {
   let gradleProjectName = fs.readdirSync(`${folder}/build/install/`)[0];
   if (gradleProjectName === undefined)
     throw `Missing executable: ${folder}build/install/`;
-  return `sh ./build/install/${gradleProjectName}/bin/${gradleProjectName}`;
+  return `./build/install/${gradleProjectName}/bin/${gradleProjectName}`;
 }
 
 function golangRunCommand(folder: string) {
-  return `sh ./app`;
+  return `./app`;
 }
 
 export const RUN_COMMAND: {
