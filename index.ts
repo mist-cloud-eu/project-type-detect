@@ -62,7 +62,7 @@ function gradleRunCommand(folder: string) {
 }
 
 function golangRunCommand(folder: string) {
-  return `./app`;
+  return `sh ./app`;
 }
 
 export const RUN_COMMAND: {

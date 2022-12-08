@@ -56,7 +56,7 @@ function gradleRunCommand(folder) {
     return `sh ./build/install/${gradleProjectName}/bin/${gradleProjectName}`;
 }
 function golangRunCommand(folder) {
-    return `./app`;
+    return `sh ./app`;
 }
 exports.RUN_COMMAND = {
     docker: () => {
