@@ -61,6 +61,10 @@ function gradleRunCommand(folder: string) {
   return `sh ./build/install/${gradleProjectName}/bin/${gradleProjectName}`;
 }
 
+function golangRunCommand(folder: string) {
+  return `./app`;
+}
+
 export const RUN_COMMAND: {
   [projectType in ProjectType]: (folder: string) => string;
 } = {
@@ -91,9 +95,7 @@ export const RUN_COMMAND: {
   rust: () => {
     throw "Rust support is coming soon";
   },
-  go: () => {
-    throw "Go support is coming soon";
-  },
+  go: golangRunCommand,
 };
 
 function generateNewFileName(folder: string) {
@@ -120,7 +122,15 @@ function nodeJsBuild(typescript: boolean) {
 
 function gradleBuild(folder: string) {
   let buildCommands: string[] = [];
-  buildCommands.push("./gradlew install");
+  buildCommands.push(`./gradlew install`);
+  return buildCommands;
+}
+
+function golangBuild(folder: string) {
+  let buildCommands: string[] = [];
+  buildCommands.push(
+    `CGO_ENABLED=0 go build -o app -ldflags="-extldflags=-static"`
+  );
   return buildCommands;
 }
 
@@ -163,7 +173,5 @@ export const MAKE_BUILD_SCRIPT: {
   rust: () => {
     throw "Rust support is coming soon";
   },
-  go: () => {
-    throw "Go support is coming soon";
-  },
+  go: common(golangBuild),
 };

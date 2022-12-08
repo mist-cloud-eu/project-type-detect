@@ -55,6 +55,9 @@ function gradleRunCommand(folder) {
         throw `Missing executable: ${folder}build/install/`;
     return `sh ./build/install/${gradleProjectName}/bin/${gradleProjectName}`;
 }
+function golangRunCommand(folder) {
+    return `./app`;
+}
 exports.RUN_COMMAND = {
     docker: () => {
         throw "Custom dockerfiles are not supported";
@@ -83,9 +86,7 @@ exports.RUN_COMMAND = {
     rust: () => {
         throw "Rust support is coming soon";
     },
-    go: () => {
-        throw "Go support is coming soon";
-    },
+    go: golangRunCommand,
 };
 function generateNewFileName(folder) {
     let result;
@@ -110,7 +111,12 @@ function nodeJsBuild(typescript) {
 }
 function gradleBuild(folder) {
     let buildCommands = [];
-    buildCommands.push("./gradlew install");
+    buildCommands.push(`./gradlew install`);
+    return buildCommands;
+}
+function golangBuild(folder) {
+    let buildCommands = [];
+    buildCommands.push(`CGO_ENABLED=0 go build -o app -ldflags="-extldflags=-static"`);
     return buildCommands;
 }
 function common(ptBuilder) {
@@ -149,7 +155,5 @@ exports.MAKE_BUILD_SCRIPT = {
     rust: () => {
         throw "Rust support is coming soon";
     },
-    go: () => {
-        throw "Go support is coming soon";
-    },
+    go: common(golangBuild),
 };
