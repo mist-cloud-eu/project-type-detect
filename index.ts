@@ -15,8 +15,8 @@ export type ProjectType =
 export function detectProjectType(folder: string): ProjectType {
   let files = fs.readdirSync(folder);
   if (files.includes(`dockerfile`)) return "docker";
-  if (files.includes(`package.json`)) return "nodejs";
   if (files.includes(`tsconfig.json`)) return "typescript";
+  if (files.includes(`package.json`)) return "nodejs";
   if (
     files.includes(`gradlew`) ||
     files.includes(`build.gradle`) ||

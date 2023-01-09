@@ -9,10 +9,10 @@ function detectProjectType(folder) {
     let files = fs_1.default.readdirSync(folder);
     if (files.includes(`dockerfile`))
         return "docker";
-    if (files.includes(`package.json`))
-        return "nodejs";
     if (files.includes(`tsconfig.json`))
         return "typescript";
+    if (files.includes(`package.json`))
+        return "nodejs";
     if (files.includes(`gradlew`) ||
         files.includes(`build.gradle`) ||
         files.includes(`settings.gradle`))
