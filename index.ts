@@ -109,13 +109,14 @@ function generateNewFileName(folder: string) {
 function nodeJsBuild(typescript: boolean) {
   return (folder: string) => {
     let buildCommands: string[] = [];
-    buildCommands.push("npm ci");
+    buildCommands.push("npm_config_loglevel=error npm ci");
     if (typescript) buildCommands.push("tsc");
     let pkg: { scripts?: { install?: string } } = JSON.parse(
       "" + fs.readFileSync(`${folder}/package.json`)
     );
     let hasInstallScript = pkg.scripts?.install !== undefined;
-    if (hasInstallScript) buildCommands.push("npm run install");
+    if (hasInstallScript)
+      buildCommands.push("npm_config_loglevel=error npm run install");
     return buildCommands;
   };
 }
