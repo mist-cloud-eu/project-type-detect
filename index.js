@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MAKE_BUILD_SCRIPT = exports.RUN_COMMAND = exports.detectProjectType = void 0;
+exports.writeBuildScript = exports.BUILD_SCRIPT_MAKERS = exports.RUN_COMMAND = exports.detectProjectType = void 0;
 const fs_1 = __importDefault(require("fs"));
 function detectProjectType(folder) {
     let files = fs_1.default.readdirSync(folder);
@@ -119,21 +119,13 @@ function golangBuild(folder) {
     buildCommands.push(`CGO_ENABLED=0 go build -o app -ldflags="-extldflags=-static"`);
     return buildCommands;
 }
-function common(ptBuilder) {
-    return (folder) => {
-        let cmds = ptBuilder(folder);
-        let fileName = generateNewFileName(folder);
-        fs_1.default.writeFileSync(`${folder}/${fileName}`, cmds.join("\n"));
-        return fileName;
-    };
-}
-exports.MAKE_BUILD_SCRIPT = {
+exports.BUILD_SCRIPT_MAKERS = {
     docker: () => {
         throw "Custom dockerfiles are not supported";
     },
-    nodejs: common(nodeJsBuild(false)),
-    typescript: common(nodeJsBuild(true)),
-    gradle: common(gradleBuild),
+    nodejs: nodeJsBuild(false),
+    typescript: nodeJsBuild(true),
+    gradle: gradleBuild,
     maven: () => {
         throw "Maven support is coming soon";
     },
@@ -155,5 +147,14 @@ exports.MAKE_BUILD_SCRIPT = {
     rust: () => {
         throw "Rust support is coming soon";
     },
-    go: common(golangBuild),
+    go: golangBuild,
 };
+function writeBuildScript(ptBuilder) {
+    return (folder) => {
+        let cmds = ptBuilder(folder);
+        let fileName = generateNewFileName(folder);
+        fs_1.default.writeFileSync(`${folder}/${fileName}`, cmds.join("\n"));
+        return fileName;
+    };
+}
+exports.writeBuildScript = writeBuildScript;

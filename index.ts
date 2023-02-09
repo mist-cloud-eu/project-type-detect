@@ -135,24 +135,15 @@ function golangBuild(folder: string) {
   return buildCommands;
 }
 
-function common(ptBuilder: (folder: string) => string[]) {
-  return (folder: string) => {
-    let cmds = ptBuilder(folder);
-    let fileName = generateNewFileName(folder);
-    fs.writeFileSync(`${folder}/${fileName}`, cmds.join("\n"));
-    return fileName;
-  };
-}
-
-export const MAKE_BUILD_SCRIPT: {
-  [projectType in ProjectType]: (folder: string) => string;
+export const BUILD_SCRIPT_MAKERS: {
+  [projectType in ProjectType]: (folder: string) => string[];
 } = {
   docker: () => {
     throw "Custom dockerfiles are not supported";
   },
-  nodejs: common(nodeJsBuild(false)),
-  typescript: common(nodeJsBuild(true)),
-  gradle: common(gradleBuild),
+  nodejs: nodeJsBuild(false),
+  typescript: nodeJsBuild(true),
+  gradle: gradleBuild,
   maven: () => {
     throw "Maven support is coming soon";
   },
@@ -174,5 +165,14 @@ export const MAKE_BUILD_SCRIPT: {
   rust: () => {
     throw "Rust support is coming soon";
   },
-  go: common(golangBuild),
+  go: golangBuild,
 };
+
+export function writeBuildScript(ptBuilder: (folder: string) => string[]) {
+  return (folder: string) => {
+    let cmds = ptBuilder(folder);
+    let fileName = generateNewFileName(folder);
+    fs.writeFileSync(`${folder}/${fileName}`, cmds.join("\n"));
+    return fileName;
+  };
+}
