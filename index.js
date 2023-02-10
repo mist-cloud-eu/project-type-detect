@@ -99,13 +99,13 @@ function nodeJsBuild(typescript) {
     return (folder) => {
         var _a;
         let buildCommands = [];
-        buildCommands.push("npm_config_loglevel=error npm ci");
+        buildCommands.push("NPM_CONFIG_UPDATE_NOTIFIER=false npm_config_loglevel=error npm ci");
         if (typescript)
             buildCommands.push("tsc");
         let pkg = JSON.parse("" + fs_1.default.readFileSync(`${folder}/package.json`));
         let hasInstallScript = ((_a = pkg.scripts) === null || _a === void 0 ? void 0 : _a.install) !== undefined;
         if (hasInstallScript)
-            buildCommands.push("npm_config_loglevel=error npm run install");
+            buildCommands.push("NPM_CONFIG_UPDATE_NOTIFIER=false npm_config_loglevel=error npm run install");
         return buildCommands;
     };
 }
