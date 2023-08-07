@@ -50,10 +50,17 @@ function nodeJsRunCommand(folder) {
     return cmd;
 }
 function gradleRunCommand(folder) {
-    let gradleProjectName = fs_1.default.readdirSync(`${folder}/build/install/`)[0];
+    let installDir;
+    if (fs_1.default.existsSync(`${folder}/build/install`))
+        installDir = `/build/install`;
+    else if (fs_1.default.existsSync(`${folder}/app/build/install`))
+        installDir = `/app/build/install`;
+    else
+        throw `Could not locate build/install folder`;
+    let gradleProjectName = fs_1.default.readdirSync(folder + installDir)[0];
     if (gradleProjectName === undefined)
-        throw `Missing executable: ${folder}build/install/`;
-    return `./build/install/${gradleProjectName}/bin/${gradleProjectName}`;
+        throw `Missing executable: ${folder}${installDir}`;
+    return `.${installDir}/${gradleProjectName}/bin/${gradleProjectName}`;
 }
 function golangRunCommand(folder) {
     return `./app`;
