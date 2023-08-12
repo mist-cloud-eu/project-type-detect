@@ -152,7 +152,7 @@ function golangBuild(folder: string) {
 
 function rustBuild(folder: string) {
   let buildCommands: string[] = [];
-  buildCommands.push(`cargo build --release -o app`);
+  buildCommands.push(`cargo build --release`);
   return buildCommands;
 }
 
