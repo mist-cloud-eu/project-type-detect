@@ -168,7 +168,9 @@ function rustBuild(folder: string) {
 
 function csharpBuild(folder: string) {
   let buildCommands: string[] = [];
-  buildCommands.push(`dotnet build`);
+  buildCommands.push(
+    `dotnet build --nologo -v q --property WarningLevel=0 /clp:ErrorsOnly`
+  );
   return buildCommands;
 }
 

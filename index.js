@@ -145,7 +145,7 @@ function rustBuild(folder) {
 }
 function csharpBuild(folder) {
     let buildCommands = [];
-    buildCommands.push(`dotnet build`);
+    buildCommands.push(`dotnet build --nologo -v q --property WarningLevel=0 /clp:ErrorsOnly`);
     return buildCommands;
 }
 exports.BUILD_SCRIPT_MAKERS = {
