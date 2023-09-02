@@ -1,6 +1,8 @@
 import fs from "fs";
+import path from "path";
 export type ProjectType =
   | "docker"
+  | "csharp"
   | "nodejs"
   | "typescript"
   | "gradle"
@@ -34,9 +36,10 @@ export function detectProjectType(folder: string): ProjectType {
     return "php";
   if (files.includes(`Gemfile`)) return "ruby";
   if (files.includes(`go.mod`)) return "go";
-  if (files.includes(`*.stb`)) return "scala";
   if (files.includes(`project.clj`)) return "clojure";
   if (files.includes(`Cargo.toml`)) return "rust";
+  if (files.some((x) => x.endsWith(`.csproj`))) return "csharp";
+  // if (files.includes(`*.stb`)) return "scala";
   throw `Unknown project type in ${folder}`;
 }
 
@@ -68,6 +71,12 @@ function gradleRunCommand(folder: string) {
 
 function golangRunCommand(folder: string) {
   return `./app`;
+}
+
+function csharpRunCommand(folder: string) {
+  let Debug_or_Release = fs.readdirSync(`${folder}/bin`)[0];
+  let arch = fs.readdirSync(`${folder}/bin/${Debug_or_Release}`)[0];
+  return `dotnet ${folder}/bin/${Debug_or_Release}/${arch}/*.dll`;
 }
 
 function rustRunCommand(folder: string) {
@@ -105,6 +114,7 @@ export const RUN_COMMAND: {
   ruby: () => {
     throw "Ruby support is coming soon";
   },
+  csharp: csharpRunCommand,
   rust: rustRunCommand,
   go: golangRunCommand,
 };
@@ -156,6 +166,12 @@ function rustBuild(folder: string) {
   return buildCommands;
 }
 
+function csharpBuild(folder: string) {
+  let buildCommands: string[] = [];
+  buildCommands.push(`dotnet build`);
+  return buildCommands;
+}
+
 export const BUILD_SCRIPT_MAKERS: {
   [projectType in ProjectType]: (folder: string) => string[];
 } = {
@@ -183,6 +199,7 @@ export const BUILD_SCRIPT_MAKERS: {
   ruby: () => {
     throw "Ruby support is coming soon";
   },
+  csharp: csharpBuild,
   rust: rustBuild,
   go: golangBuild,
 };
