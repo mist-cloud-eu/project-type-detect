@@ -76,7 +76,7 @@ function golangRunCommand(folder: string) {
 function csharpRunCommand(folder: string) {
   let Debug_or_Release = fs.readdirSync(`${folder}/bin`)[0];
   let arch = fs.readdirSync(`${folder}/bin/${Debug_or_Release}`)[0];
-  return `dotnet ${folder}/bin/${Debug_or_Release}/${arch}/*.dll`;
+  return `dotnet ./bin/${Debug_or_Release}/${arch}/*.dll`;
 }
 
 function rustRunCommand(folder: string) {
