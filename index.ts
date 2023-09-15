@@ -1,5 +1,4 @@
 import fs from "fs";
-import path from "path";
 export type ProjectType =
   | "docker"
   | "csharp"
@@ -217,3 +216,21 @@ export function writeBuildScript(ptBuilder: (folder: string) => string[]) {
     return fileName;
   };
 }
+
+export const VERSION_CMD: {
+  [projectType in ProjectType]: string;
+} = {
+  docker: "docker --version",
+  nodejs: "node --version",
+  typescript: "tsc --version",
+  gradle: "./gradlew --version",
+  maven: "echo TODO",
+  python: "echo TODO",
+  php: "echo TODO",
+  scala: "echo TODO",
+  clojure: "echo TODO",
+  ruby: "ruby --version",
+  csharp: "dotnet --version",
+  rust: "cargo --version",
+  go: "go version",
+};
